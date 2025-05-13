@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { CourseContext } from "./CourseContext";
 
 export default function SchoolCatalog() {
   const [courses, setCourses] = useState([]);
@@ -6,6 +7,7 @@ export default function SchoolCatalog() {
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
+  const { enrolledCourses, enrollCourse } = useContext(CourseContext);
 
   useEffect(() => {
     fetch("/api/courses.json")
@@ -16,7 +18,7 @@ export default function SchoolCatalog() {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    setPage(1); // reset to first page when filtering
+    setPage(1);
   };
 
   const handleSort = (key) => {
@@ -95,21 +97,25 @@ export default function SchoolCatalog() {
               <td>{course.semesterCredits}</td>
               <td>{course.totalClockHours}</td>
               <td>
-                <button>Enroll</button>
+                <button
+                  onClick={() => enrollCourse(course)}
+                  disabled={enrolledCourses.some(
+                    (c) => c.courseNumber === course.courseNumber
+                  )}
+                >
+                  Enroll
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      {/* Pagination Controls */}
       <div className="pagination">
         <button onClick={handlePrev} disabled={page === 1}>
           Previous
         </button>
         <span>
-          {" "}
-          Page {page} of {totalPages}{" "}
+          Page {page} of {totalPages}
         </span>
         <button onClick={handleNext} disabled={page === totalPages}>
           Next
