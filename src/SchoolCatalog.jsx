@@ -4,6 +4,8 @@ export default function SchoolCatalog() {
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 5;
 
   useEffect(() => {
     fetch("/api/courses.json")
@@ -12,7 +14,10 @@ export default function SchoolCatalog() {
       .catch((err) => console.error("Failed to load courses:", err));
   }, []);
 
-  const handleSearchChange = (e) => setSearch(e.target.value);
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setPage(1); // reset to first page when filtering
+  };
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -32,7 +37,6 @@ export default function SchoolCatalog() {
     if (sortConfig.key) {
       const aVal = a[sortConfig.key];
       const bVal = b[sortConfig.key];
-
       if (typeof aVal === "string") {
         return sortConfig.direction === "asc"
           ? aVal.localeCompare(bVal)
@@ -43,6 +47,20 @@ export default function SchoolCatalog() {
     }
     return 0;
   });
+
+  const totalPages = Math.ceil(sortedCourses.length / rowsPerPage);
+  const paginatedCourses = sortedCourses.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
 
   return (
     <div className="school-catalog">
@@ -69,7 +87,7 @@ export default function SchoolCatalog() {
           </tr>
         </thead>
         <tbody>
-          {sortedCourses.map((course) => (
+          {paginatedCourses.map((course) => (
             <tr key={course.courseNumber}>
               <td>{course.trimester}</td>
               <td>{course.courseNumber}</td>
@@ -83,6 +101,20 @@ export default function SchoolCatalog() {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      <div className="pagination">
+        <button onClick={handlePrev} disabled={page === 1}>
+          Previous
+        </button>
+        <span>
+          {" "}
+          Page {page} of {totalPages}{" "}
+        </span>
+        <button onClick={handleNext} disabled={page === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }
