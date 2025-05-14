@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Atlas Homepage",
+    "link": "https://www.atlasschool.com"
+  },
+  {
+    "label": "React Docs",
+    "link": "https://reactjs.org"
+  },
+  {
+    "label": "Vite Docs",
+    "link": "https://vitejs.dev"
+  }
+]
