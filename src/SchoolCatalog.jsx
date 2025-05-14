@@ -1,3 +1,4 @@
+// src/SchoolCatalog.jsx
 import React, { useEffect, useState, useContext } from "react";
 import { CourseContext } from "./CourseContext";
 
@@ -18,7 +19,7 @@ export default function SchoolCatalog() {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    setPage(1);
+    setPage(1); // reset to first page when filtering
   };
 
   const handleSort = (key) => {
