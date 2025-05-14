@@ -1,14 +1,13 @@
-// src/components/Header.jsx
 import React, { useContext } from "react";
-import logo from "../assets/logo.png"; // Adjust the path if needed
-import { CourseContext } from "../CourseContext"; // Import the context
+import logo from "../assets/logo.png";
+import { CourseContext } from "../CourseContext";
 
 export default function Header() {
-  const { enrolledCourses } = useContext(CourseContext); // Access enrolledCourses
+  const { enrolledCourses } = useContext(CourseContext);
 
   return (
     <div className="header">
-      <img src={logo} alt="logo" className="logo" />
+      <img src={logo} alt="Atlas Logo" className="logo" />
       <div className="enrollment">
         Classes Enrolled: {enrolledCourses.length}
       </div>
